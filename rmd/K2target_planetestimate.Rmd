@@ -1,0 +1,110 @@
+---
+title: "K2 targets"
+author: "J. Dotson"
+date: "October 14, 2018"
+output: html_document
+---
+
+Goal of this document is to generate a list of unique stars observed by K2 for at least one full length campaign.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,message=FALSE)
+
+require(dplyr)
+require(tidyr)
+require(knitr)
+require(readr)
+require(kableExtra)
+
+
+knitr::opts_knit$set(root.dir = '../.')
+myecho = TRUE #controls whether code is echoed to output
+```
+
+MAST has both the epic catalog and a list of all the K2 data products in their databases.  The following commands were used to join these two datatables and pull the parameters of interest in the MAST CasJobs interface (http://mastweb.stsci.edu/kplrcasjobs/SubmitJob.aspx)  The result was downloaded as a .csv file.  
+
+>SELECT INTO K2observed_targets  
+   id,  
+   sci_campaign,  
+   objtype,  
+   kp,  
+   teff,  
+   ep_teff,  
+   em_teff,  
+   logg,  
+   ep_logg,  
+   em_logg,  
+   rad,  
+   ep_rad,  
+   em_rad,  
+   mass,  
+   ep_mass,  
+   em_mass,  
+   d  
+FROM k2_science  
+JOIN k2_epic ON k2_epic.id = k2_science.sci_kepler_id  
+WHERE sci_archive_class = 'KTL'  
+
+Start by reading in results of MAST query.
+
+```{r , echo=myecho, results='asis'}
+
+k2targets <- read_csv("data/K2observed_targets_jdotson.csv",na=c("","null"))
+print(paste("Number of entries in K2targets =",nrow(k2targets)))
+
+```
+
+
+
+
+Remove stars observed multiple times, extended targets, and targets without teff/logg
+
+```{r , echo=myecho, results='asis'}
+
+#create list of unique targets for use in planet estimate
+k2unique <- k2targets[!duplicated(k2targets$id),]
+print(paste("Number of unique targets =", nrow(k2unique)))
+
+kable(count(k2unique,objtype),caption="unique targets by type") %>%
+  kable_styling(bootstrap_options = c("striped", "condensed"),full_width=F,position="left")  
+
+
+print(paste("Number of objects without Teff = ", sum(is.na(k2unique$teff))))
+print(paste("Number of objects without logg =", sum(is.na(k2unique$logg))))
+
+
+```
+
+Before closing the books on this one, let's just understand a little bit about the entries with out teff and logg...
+
+```{r, echo=myecho, results='asis'}
+
+need_teff <- filter(k2unique, is.na(teff))
+
+kable(count(need_teff,objtype),caption="targets without teff/logg") %>%
+  kable_styling(bootstrap_options = c("striped", "condensed"),full_width=F,position="left")
+
+
+```
+
+In general, if something doesn't have Teff and logg, then it probably isn't a star -- even if it's labeled as such.  So, for the purposes of generating a list of observed stars, we can just ignore those.  Save resulting list as an .RDS and .csv for use elsewhere.
+
+
+
+
+```{r, echo=myecho}
+
+k2uniquestars <- filter(k2unique, !is.na(teff))
+
+saveRDS(k2uniquestars,"RDS/k2uniquestars.rds")
+write_csv(k2uniquestars,"data/k2uniquestar.csv")
+```
+
+
+
+
+
+
+
+
+
