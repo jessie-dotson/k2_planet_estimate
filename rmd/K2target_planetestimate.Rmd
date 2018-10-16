@@ -2,7 +2,8 @@
 title: "K2 targets"
 author: "J. Dotson"
 date: "October 14, 2018"
-output: html_document
+output: github_document
+always_allow_html: yes
 ---
 
 Goal of this document is to generate a list of unique stars observed by K2 for at least one full length campaign.
