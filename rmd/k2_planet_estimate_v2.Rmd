@@ -1,7 +1,7 @@
 ---
 title: "K2 planet yield estimate"
 author: "J. Dotson"
-date: "10/14/2018"
+date: "10/26/2018"
 output: github_document
 
 ---

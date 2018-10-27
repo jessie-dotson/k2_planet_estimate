@@ -19,7 +19,7 @@ require(kableExtra)
 
 
 knitr::opts_knit$set(root.dir = '../.')
-myecho = TRUE #controls whether code is echoed to output
+myecho = TRUE #controls whether code is echoed to outputde 
 ```
 
 MAST has both the epic catalog and a list of all the K2 data products in their databases.  The following commands were used to join these two datatables and pull the parameters of interest in the MAST CasJobs interface (http://mastweb.stsci.edu/kplrcasjobs/SubmitJob.aspx)  The result was downloaded as a .csv file.  

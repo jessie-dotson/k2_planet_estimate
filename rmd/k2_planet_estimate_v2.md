@@ -1,7 +1,7 @@
 K2 planet yield estimate
 ================
 J. Dotson
-10/14/2018
+10/26/2018
 
 Goal is to estimate the number of planets yet to be found in K2 data. As a rough starting point, let's look at how many planets were found in Kepler... But it's not a straight analogy based just on the number of targets. While both Kepler and K2 are executed with the same spacecraft, we need to make a few corrections to account for the differences between the missions.
 
@@ -30,7 +30,7 @@ if (download_flag)  {
 }
 ```
 
-\[1\] "Confirmed planets table downloaded on Mon Oct 15 17:04:28 2018" \[1\] "DR25 stellar table downloaded on Mon Oct 15 17:05:23 2018"
+\[1\] "Confirmed planets table downloaded on Sat Oct 27 16:34:04 2018" \[1\] "DR25 stellar table downloaded on Sat Oct 27 16:35:19 2018"
 
 ``` r
 #read in the tables downloaded from NExScI
@@ -155,7 +155,7 @@ k2planets<-filter(confirmedplanets, pl_facility=="K2")
 print(paste("Number of k2 planets = ", nrow(k2planets)))
 ```
 
-\[1\] "Number of k2 planets = 330"
+\[1\] "Number of k2 planets = 354"
 
 ``` r
 k2planets$Tdepth <- (k2planets$pl_radj * Rjup) / (k2planets$st_rad * Rsol)
