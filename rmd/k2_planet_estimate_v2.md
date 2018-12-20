@@ -1,7 +1,7 @@
 K2 planet yield estimate
 ================
 J. Dotson
-10/26/2018
+12/19/2018
 
 Goal is to estimate the number of planets yet to be found in K2 data. As a rough starting point, let's look at how many planets were found in Kepler... But it's not a straight analogy based just on the number of targets. While both Kepler and K2 are executed with the same spacecraft, we need to make a few corrections to account for the differences between the missions.
 
@@ -12,6 +12,7 @@ First download the confirmed planets table and dr25 stars from NExScI.
 
 ``` r
 download_flag <- TRUE  # Change to false if you want to use previously downloaded tables
+#download_flag <- FALSE
 
 if (download_flag)  {
   # download confirmed planets 
@@ -30,7 +31,7 @@ if (download_flag)  {
 }
 ```
 
-\[1\] "Confirmed planets table downloaded on Sat Oct 27 16:34:04 2018" \[1\] "DR25 stellar table downloaded on Sat Oct 27 16:35:19 2018"
+\[1\] "Confirmed planets table downloaded on Wed Dec 19 17:13:20 2018" \[1\] "DR25 stellar table downloaded on Wed Dec 19 17:14:27 2018"
 
 ``` r
 #read in the tables downloaded from NExScI
@@ -142,8 +143,6 @@ We need to take into account how detectable a planet is. Even in this shorter pe
 Rjup <- 69911 #km
 Rsol <- 695700 #km
 
-#kepler_planets$Tdepth <- (kepler_planets$pl_radj * Rjup) / (kepler_planets$st_rad * Rsol)
-#shortplanets$Tdepth <- (shortplanets$pl_radj * Rjup) / (shortplanets$st_rad * Rsol)
 shortplanetsMS$Tdepth <- (shortplanetsMS$pl_radj * Rjup) / (shortplanetsMS$st_rad * Rsol)
 ```
 
@@ -155,7 +154,7 @@ k2planets<-filter(confirmedplanets, pl_facility=="K2")
 print(paste("Number of k2 planets = ", nrow(k2planets)))
 ```
 
-\[1\] "Number of k2 planets = 354"
+\[1\] "Number of k2 planets = 359"
 
 ``` r
 k2planets$Tdepth <- (k2planets$pl_radj * Rjup) / (k2planets$st_rad * Rsol)
@@ -212,7 +211,7 @@ myy2 <- my_slope * myx + my_intercept2
 
 limitline <- data.frame(myx=myx,myy2=myy2)
 
-p_depth_mag_wcut <- p_depth_mag + geom_line(data=limitline,aes(x=myx,y=myy2),col="blue",size=1)
+p_depth_mag_wcut <- p_depth_mag + geom_line(data=limitline,aes(x=myx,y=myy2),col="blue",size=1) 
 print(p_depth_mag_wcut)
 ```
 
@@ -369,5 +368,6 @@ print(pcompare3 + ggtitle("Confirmed and Predicted Distribution of K2 planets"))
 ![](k2_planet_estimate_v2_files/figure-markdown_github/unnamed-chunk-19-1.png)
 
 ``` r
+#print(pcompare3) #figure without title for publication
 ggsave("plots/predict_and_known.pdf")
 ```
